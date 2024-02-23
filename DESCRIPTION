@@ -1,0 +1,16 @@
+Package: hud.maps
+Title: HUD mapping utilities
+Version: 0.0.0.9000
+Authors@R:
+    person("Keith", "Ng", , "keith.ng@hud.govt.nz", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: HUD mapping utilities (map functions)
+License: `use_mit_license()`
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    tidyverse,
+    sf,
+    leaflet,
+    mapview
