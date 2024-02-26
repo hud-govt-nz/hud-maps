@@ -29,7 +29,16 @@ make_margins <-
       mutate(direction = c("north", "east", "south", "west"))
   }
 
-# Generate a bounding box that captures X% of features (i.e. Drop outliers)
+#' Squeeze bounding box
+#' 
+#' Generate a more efficient bounding box by dropping outliers
+#' @name squeeze_bbox
+#' @param features features in a spatial frame
+#' @param capture_targ aim for a box that fits this proportion of features
+#' @param step_size shrink the box by this much every step
+#' @param max_steps maximum numbers of steps to attempt before giving up
+#' @param sample_rate apply on a random sample of the features instead
+#' @export
 squeeze_bbox <-
   function(features, capture_targ = 0.9995, step_size = 0.025, max_steps = 50, sample_rate = 0.5) {
     message("Finding optimal bounding box covering ", capture_targ, " of features.")
@@ -91,6 +100,23 @@ squeeze_bbox <-
     return(bbox)
   }
 
+#' Create choropleth
+#' 
+#' Create a Leaflet choropleth instance. The function will create a map
+#' object. You can assign it to a variable and view the variable with the
+#' build-in viewer, or you can use render_map() to generate a static image
+#' of the map object.
+#' 
+#' You can also add legends or additional layers before rendering.
+#' @name make_choropleth
+#' @param features features in a spatial frame
+#' @param fill_col string; name of the column to use for colour
+#' @param fill_scale
+#'   Leaflet scale object (e.g. colorFactor/colorNumeric) or colour
+#' @param fill_opacity number
+#' @param stroke color
+#' @param ... additional parameters to pass to the addPolygons() step
+#' @export
 make_choropleth <-
   function(features, fill_col, fill_scale, fill_opacity = 0.8, stroke = FALSE, ...) {
     message("Creating choropleth on column '", fill_col, "'...")
@@ -106,6 +132,25 @@ make_choropleth <-
       )
   }
 
+#' Create bubblemap
+#' 
+#' Create a Leaflet bubblemap instance. The function will create a map
+#' object. You can assign it to a variable and view the variable with the
+#' build-in viewer, or you can use render_map() to generate a static image
+#' of the map object.
+#' 
+#' You can also add legends or additional layers before rendering.
+#' @name make_bubblemap
+#' @param features features in a spatial frame
+#' @param radius_col string; name of the column to use for radius
+#' @param radius_scale number; how much to scale the radius by
+#' @param fill_col string; name of the column to use for colour
+#' @param fill_scale
+#'   Leaflet scale object (e.g. colorFactor/colorNumeric) or colour
+#' @param fill_opacity number
+#' @param stroke color
+#' @param ... additional parameters to pass to the addCircles() step
+#' @export
 make_bubblemap <-
   function(features, radius_col, radius_scale, fill_col, fill_scale, fill_opacity = 0.8, stroke = FALSE, ...) {
     message("Creating bubble map on column '", radius_col, "'...")
@@ -127,6 +172,21 @@ make_bubblemap <-
       )
   }
 
+#' Render map
+#' 
+#' Generates a static image from a map object using mapshot2. At high
+#' resolutions and high object density, this can be a very expensive
+#' operation.
+#' 
+#' The rendering is done via a headless Chrome browser. See README for setup.
+#' @name make_bubblemap
+#' @param map Leaflet map object
+#' @param out_fn string; filename to render to
+#' @param bbox bounding box of area to render; if not provided, map will fit to
+#'   include all features
+#' @param timeout integer; time to wait for rendering to finish. Defaults to
+#'   7200 (2 hours)
+#' @export
 render_map <-
   function(map, out_fn, bbox = NULL, timeout = 7200) {
     message("Writing map to file '", out_fn, "'...")
@@ -134,7 +194,7 @@ render_map <-
     # All the rendering work is outsourced to a headless Chrome browser, so we need
     # to give it time to finish. The default is 10 seconds. We need to up it a lot.
     browser <- chromote::Chromote$new()
-    browser$default_timeout <- timeout # 2 hours
+    browser$default_timeout <- timeout
     chromote::set_default_chromote_object(browser)
     if (!is.null(bbox)) {
       map <-
