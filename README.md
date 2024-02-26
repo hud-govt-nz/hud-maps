@@ -8,6 +8,10 @@ library(devtools)
 install_github("hud-govt-nz/hud-maps")
 ```
 
+On Linux, these libraries are required
+```
+sudo apt-get install libgdal-dev libproj-dev 
+```
 
 ## Usage
 
