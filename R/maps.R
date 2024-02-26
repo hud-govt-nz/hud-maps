@@ -1,7 +1,5 @@
 library(tidyverse)
 library(sf)
-library(leaflet)
-library(mapview)
 
 make_rect <-
   function(xmin, ymin, xmax, ymax) {
@@ -115,21 +113,32 @@ squeeze_bbox <-
 #'   Leaflet scale object (e.g. colorFactor/colorNumeric) or colour
 #' @param fill_opacity number
 #' @param stroke color
+#' @param hide_legend boolean
 #' @param ... additional parameters to pass to the addPolygons() step
 #' @export
 make_choropleth <-
-  function(features, fill_col, fill_scale, fill_opacity = 0.8, stroke = FALSE, ...) {
+  function(features, fill_col, fill_scale, fill_opacity = 0.8, stroke = FALSE, hide_legend = FALSE, ...) {
     message("Creating choropleth on column '", fill_col, "'...")
-    features %>%
-      leaflet() %>%
-      addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
-      addPolygons(
+    map <-
+      features %>%
+      leaflet::leaflet() %>%
+      leaflet::addProviderTiles(leaflet::providers$Esri.WorldGrayCanvas) %>%
+      leaflet::addPolygons(
         fillColor = ~fill_scale(get({{fill_col}})),
         fillOpacity = fill_opacity,
         smoothFactor = 0,
         stroke = stroke,
-        ...
-      )
+        ...)
+    if (hide_legend == FALSE) {
+      map <-
+        map %>%
+        leaflet::addLegend(
+          pal = fill_scale,
+          values = ~get({{fill_col}}),
+          title = fill_col,
+          opacity = 1)
+    }
+    return(map)
   }
 
 #' Create bubblemap
@@ -149,27 +158,32 @@ make_choropleth <-
 #'   Leaflet scale object (e.g. colorFactor/colorNumeric) or colour
 #' @param fill_opacity number
 #' @param stroke color
+#' @param hide_legend boolean
 #' @param ... additional parameters to pass to the addCircles() step
 #' @export
 make_bubblemap <-
-  function(features, radius_col, radius_scale, fill_col, fill_scale, fill_opacity = 0.8, stroke = FALSE, ...) {
+  function(features, radius_col, radius_scale, fill_col, fill_scale, fill_opacity = 0.8, stroke = FALSE, hide_legend = FALSE, ...) {
     message("Creating bubble map on column '", radius_col, "'...")
-    features %>%
-      leaflet() %>%
-      addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
-      addCircles(
+    map <-
+      features %>%
+      leaflet::leaflet() %>%
+      leaflet::addProviderTiles(leaflet::providers$Esri.WorldGrayCanvas) %>%
+      leaflet::addCircles(
         radius = ~radius_scale(get({{radius_col}})),
         fillColor = ~fill_scale(get({{fill_col}})),
         fillOpacity = fill_opacity,
         stroke = stroke,
-        ...
-      ) %>%
-      addLegend(
-        pal = fill_scale,
-        values = ~get({{fill_col}}),
-        title = fill_col,
-        opacity = 1
-      )
+        ...)
+    if (hide_legend == FALSE) {
+      map <-
+        map %>%
+        leaflet::addLegend(
+          pal = fill_scale,
+          values = ~get({{fill_col}}),
+          title = fill_col,
+          opacity = 1)
+    }
+    return(map)
   }
 
 #' Render map
@@ -198,12 +212,12 @@ render_map <-
     chromote::set_default_chromote_object(browser)
     if (!is.null(bbox)) {
       map <-
-        fitBounds(
+        leaflet::fitBounds(
           map,
           bbox[["xmin"]], bbox[["ymin"]],
           bbox[["xmax"]], bbox[["ymax"]])
     }
-    mapshot2(
+    mapview::mapshot2(
       map,
       file = out_fn, selfcontained = FALSE,
       vwidth = 3840, vheight = 2160)

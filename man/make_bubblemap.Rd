@@ -13,6 +13,7 @@ make_bubblemap(
   fill_scale,
   fill_opacity = 0.8,
   stroke = FALSE,
+  hide_legend = FALSE,
   ...
 )
 
@@ -32,6 +33,8 @@ render_map(map, out_fn, bbox = NULL, timeout = 7200)
 \item{fill_opacity}{number}
 
 \item{stroke}{color}
+
+\item{hide_legend}{boolean}
 
 \item{...}{additional parameters to pass to the addCircles() step}
 

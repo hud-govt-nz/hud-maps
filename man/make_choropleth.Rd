@@ -10,6 +10,7 @@ make_choropleth(
   fill_scale,
   fill_opacity = 0.8,
   stroke = FALSE,
+  hide_legend = FALSE,
   ...
 )
 }
@@ -23,6 +24,8 @@ make_choropleth(
 \item{fill_opacity}{number}
 
 \item{stroke}{color}
+
+\item{hide_legend}{boolean}
 
 \item{...}{additional parameters to pass to the addPolygons() step}
 }

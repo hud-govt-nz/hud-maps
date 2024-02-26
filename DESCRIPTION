@@ -13,4 +13,6 @@ Imports:
     tidyverse,
     sf,
     leaflet,
-    mapview
+    mapview,
+    webshot2,
+    chromote
