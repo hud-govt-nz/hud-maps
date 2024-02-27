@@ -193,7 +193,7 @@ make_bubblemap <-
 #' operation.
 #' 
 #' The rendering is done via a headless Chrome browser. See README for setup.
-#' @name make_bubblemap
+#' @name render_map
 #' @param map Leaflet map object
 #' @param out_fn string; filename to render to
 #' @param bbox bounding box of area to render; if not provided, map will fit to
@@ -202,7 +202,7 @@ make_bubblemap <-
 #'   7200 (2 hours)
 #' @export
 render_map <-
-  function(map, out_fn, bbox = NULL, timeout = 7200) {
+  function(map, out_fn, bbox = NULL, timeout = 7200, width = 3840, height = 2160) {
     message("Writing map to file '", out_fn, "'...")
     # Set browser timeout
     # All the rendering work is outsourced to a headless Chrome browser, so we need
@@ -220,5 +220,5 @@ render_map <-
     mapview::mapshot2(
       map,
       file = out_fn, selfcontained = FALSE,
-      vwidth = 3840, vheight = 2160)
+      vwidth = width, vheight = height)
   }

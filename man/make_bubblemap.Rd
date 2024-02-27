@@ -2,7 +2,6 @@
 % Please edit documentation in R/maps.R
 \name{make_bubblemap}
 \alias{make_bubblemap}
-\alias{render_map}
 \title{Create bubblemap}
 \usage{
 make_bubblemap(
@@ -16,8 +15,6 @@ make_bubblemap(
   hide_legend = FALSE,
   ...
 )
-
-render_map(map, out_fn, bbox = NULL, timeout = 7200)
 }
 \arguments{
 \item{features}{features in a spatial frame}
@@ -37,29 +34,13 @@ render_map(map, out_fn, bbox = NULL, timeout = 7200)
 \item{hide_legend}{boolean}
 
 \item{...}{additional parameters to pass to the addCircles() step}
-
-\item{map}{Leaflet map object}
-
-\item{out_fn}{string; filename to render to}
-
-\item{bbox}{bounding box of area to render; if not provided, map will fit to
-include all features}
-
-\item{timeout}{integer; time to wait for rendering to finish. Defaults to
-7200 (2 hours)}
 }
 \description{
 Create a Leaflet bubblemap instance. The function will create a map
 object. You can assign it to a variable and view the variable with the
 build-in viewer, or you can use render_map() to generate a static image
 of the map object.
-
-Generates a static image from a map object using mapshot2. At high
-resolutions and high object density, this can be a very expensive
-operation.
 }
 \details{
 You can also add legends or additional layers before rendering.
-
-The rendering is done via a headless Chrome browser. See README for setup.
 }
