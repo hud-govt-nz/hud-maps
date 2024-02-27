@@ -121,6 +121,7 @@ make_choropleth <-
     message("Creating choropleth on column '", fill_col, "'...")
     map <-
       features %>%
+      sf::st_transform(4326) %>%
       leaflet::leaflet() %>%
       leaflet::addProviderTiles(leaflet::providers$Esri.WorldGrayCanvas) %>%
       leaflet::addPolygons(
@@ -166,6 +167,7 @@ make_bubblemap <-
     message("Creating bubble map on column '", radius_col, "'...")
     map <-
       features %>%
+      sf::st_transform(4326) %>%
       leaflet::leaflet() %>%
       leaflet::addProviderTiles(leaflet::providers$Esri.WorldGrayCanvas) %>%
       leaflet::addCircles(
